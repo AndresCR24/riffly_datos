@@ -1,0 +1,329 @@
+╔══════════════════════════════════════════════════════════════╗
+║   CÓMO PROBAR EL PROYECTO - RIFFLY MUSIC PLATFORM          ║
+║                    PASO A PASO                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+✅ CONEXIÓN CONFIGURADA:
+   • Usuario: riffly_m
+   • Contraseña: root123
+   • Base de datos: localhost:1521/XE
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 OPCIÓN 1: INICIO RÁPIDO (UN SOLO COMANDO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+En la terminal, ejecuta:
+
+   ./iniciar_servidor.sh
+
+Este script:
+✓ Verifica las dependencias
+✓ Prueba la conexión a Oracle
+✓ Verifica los templates
+✓ Inicia el servidor automáticamente
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔧 OPCIÓN 2: MANUAL (SI HAY ERRORES)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1: Verificar la conexión a Oracle
+──────────────────────────────────────────────────────────────
+
+   python db_connection.py
+
+RESULTADO ESPERADO:
+   ✅ Conexión exitosa!
+   📊 Estadísticas de la base de datos:
+      • USERS: X registros
+      • SONGS: X registros
+      ...
+
+SI DA ERROR:
+   - Verifica que Oracle esté corriendo en PyCharm
+   - Revisa la pestaña "Database" en PyCharm
+   - Asegúrate de que la conexión "riffly_m" esté activa
+
+
+PASO 2: Iniciar el servidor Django
+──────────────────────────────────────────────────────────────
+
+   python manage.py runserver
+
+Deberías ver:
+   Starting development server at http://127.0.0.1:8000/
+   Quit the server with CONTROL-C.
+
+
+PASO 3: Abrir el navegador
+──────────────────────────────────────────────────────────────
+
+Abre: http://localhost:8000/
+
+Deberías ver el Dashboard de Riffly con:
+✓ 4 tarjetas de estadísticas (usuarios, canciones, géneros, playlists)
+✓ Tabla de canciones recientes
+✓ Botones de acciones rápidas
+✓ Tarjetas de módulos
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🌐 PÁGINAS PARA PROBAR (EN ORDEN)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. DASHBOARD PRINCIPAL
+   http://localhost:8000/
+
+   ¿Qué deberías ver?
+   ✓ Contador de usuarios, canciones, géneros y playlists
+   ✓ Tabla con las 5 canciones más recientes
+   ✓ Navegación superior con todos los módulos
+
+2. USUARIOS
+   http://localhost:8000/usuarios/
+
+   ¿Qué deberías ver?
+   ✓ Tabla con todos los usuarios
+   ✓ Columnas: ID, Username, Nombre, Email, Tipo, Estado
+   ✓ Badges de colores para el tipo y estado
+   ✓ Botón "Ver Perfil" en cada usuario
+
+3. CREAR USUARIO
+   http://localhost:8000/usuarios/crear/
+
+   Prueba crear un usuario:
+   ✓ Username: test_user
+   ✓ Email: test@ejemplo.com
+   ✓ Contraseña: test123
+   ✓ Nombre: Usuario de Prueba
+   ✓ Tipo: artista
+   ✓ Biografía: "Artista de prueba"
+
+4. GÉNEROS
+   http://localhost:8000/generos/
+
+   ¿Qué deberías ver?
+   ✓ Lista de todos los géneros musicales
+   ✓ Contador de canciones por género
+
+5. CREAR GÉNERO
+   http://localhost:8000/generos/crear/
+
+   Prueba crear géneros:
+   ✓ Rock
+   ✓ Pop
+   ✓ Jazz
+   ✓ Electronic
+
+6. CANCIONES
+   http://localhost:8000/canciones/
+
+   ¿Qué deberías ver?
+   ✓ Catálogo de canciones con artista
+   ✓ Duración en segundos
+   ✓ Descripción
+   ✓ Botón "Ver Detalles"
+
+7. CREAR CANCIÓN
+   http://localhost:8000/canciones/crear/
+
+   Prueba crear una canción:
+   ✓ Título: Mi Primera Canción
+   ✓ Duración: 180 (segundos)
+   ✓ Artista: (selecciona uno)
+   ✓ Descripción: "Canción de prueba"
+
+8. PLAYLISTS
+   http://localhost:8000/playlists/
+
+   ¿Qué deberías ver?
+   ✓ Lista de playlists con propietario
+   ✓ Contador de canciones
+   ✓ Indicador público/privado
+
+9. ESTADÍSTICAS
+   http://localhost:8000/estadisticas/
+
+   ¿Qué deberías ver?
+   ✓ Top 10 canciones más reproducidas
+   ✓ Top 10 canciones más gustadas
+   ✓ Géneros más populares
+
+10. COMENTARIOS
+    http://localhost:8000/comentarios/
+
+    ¿Qué deberías ver?
+    ✓ Lista de comentarios recientes
+    ✓ Usuario que comentó
+    ✓ Canción comentada
+    ✓ Fecha del comentario
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🐛 SOLUCIÓN DE PROBLEMAS COMUNES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLEMA 1: "Error de conexión a Oracle"
+─────────────────────────────────────────────────────────────
+
+SOLUCIÓN:
+1. Abre PyCharm
+2. Ve a la pestaña "Database" (lado derecho)
+3. Verifica que la conexión "riffly_m" esté activa (luz verde)
+4. Si está roja, haz clic derecho → "Test Connection"
+5. Si falla, verifica la contraseña: root123
+
+
+PROBLEMA 2: "Página en blanco o error 500"
+─────────────────────────────────────────────────────────────
+
+SOLUCIÓN:
+1. Revisa la terminal donde corre el servidor
+2. Busca mensajes de error en rojo
+3. Si dice "Table or view does not exist":
+   - Las tablas no existen en Oracle
+   - Verifica en PyCharm que las tablas estén creadas
+4. Si dice "Error conectando a Oracle":
+   - Ejecuta: python db_connection.py
+   - Verifica el mensaje de error
+
+
+PROBLEMA 3: "No se muestran datos en las tablas"
+─────────────────────────────────────────────────────────────
+
+SOLUCIÓN:
+Las tablas están vacías. Necesitas crear datos:
+1. Ir a http://localhost:8000/generos/crear/
+2. Crear algunos géneros primero
+3. Ir a http://localhost:8000/usuarios/crear/
+4. Crear usuarios (artistas, productores)
+5. Ir a http://localhost:8000/canciones/crear/
+6. Crear canciones
+
+
+PROBLEMA 4: "Template not found" o "TemplateDoesNotExist"
+─────────────────────────────────────────────────────────────
+
+SOLUCIÓN:
+Verifica que existan estas carpetas y archivos:
+
+   ls templates/
+   ls templates/usuarios/
+   ls templates/canciones/
+   ls templates/generos/
+   ls templates/playlists/
+   ls templates/comentarios/
+
+Si faltan, los archivos están creados. Reinicia el servidor:
+   Ctrl+C (para detener)
+   python manage.py runserver (para iniciar)
+
+
+PROBLEMA 5: "ImportError: No module named cx_Oracle"
+─────────────────────────────────────────────────────────────
+
+SOLUCIÓN:
+   pip install cx_Oracle
+
+
+PROBLEMA 6: Los estilos no se ven bien
+─────────────────────────────────────────────────────────────
+
+SOLUCIÓN:
+Los estilos están en los templates (inline CSS).
+Presiona Ctrl+F5 en el navegador para recargar.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CHECKLIST DE VERIFICACIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Antes de iniciar:
+☐ Oracle está corriendo (verificar en PyCharm)
+☐ Contraseña correcta en db_connection.py (root123)
+☐ Tablas existen en Oracle (USERS, SONGS, GENRES, etc.)
+☐ cx_Oracle instalado (python -c "import cx_Oracle")
+
+Durante la prueba:
+☐ Dashboard carga sin errores
+☐ Navegación superior funciona
+☐ Puedes ver lista de usuarios
+☐ Puedes crear un usuario nuevo
+☐ Puedes ver lista de géneros
+☐ Puedes crear un género nuevo
+☐ Puedes ver lista de canciones
+☐ Puedes crear una canción
+☐ Los perfiles de usuario muestran sus canciones
+☐ Las estadísticas muestran rankings
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 ARCHIVOS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+db_connection.py        - Conexión a Oracle (AQUÍ está la config)
+myapp/views.py          - Toda la lógica de las vistas
+DjangoProject/urls.py   - Rutas del proyecto
+templates/              - Todos los archivos HTML
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 COMANDOS ÚTILES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Probar conexión
+python db_connection.py
+
+# Iniciar servidor
+python manage.py runserver
+
+# Verificar configuración
+python manage.py check
+
+# Ver ayuda
+python manage.py --help
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 TIPS IMPORTANTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. SI LA PÁGINA SE VE VACÍA:
+   → Probablemente no hay datos en la BD
+   → Crea usuarios y géneros primero
+
+2. SI HAY ERRORES EN LA TERMINAL:
+   → LEE el mensaje de error completo
+   → Busca líneas que empiecen con "Error" o "Exception"
+   → El error te dirá exactamente qué falta
+
+3. VERIFICA LA CONSOLA DEL NAVEGADOR:
+   → Presiona F12 en el navegador
+   → Ve a la pestaña "Console"
+   → Si hay errores JavaScript, ignóralos (no afectan)
+
+4. LAS CONSULTAS SQL SE IMPRIMEN:
+   → Si hay error, verás en la terminal qué query falló
+   → Eso te ayuda a identificar el problema
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 ¡LISTO PARA PROBAR!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ejecuta UNO de estos comandos:
+
+   ./iniciar_servidor.sh     (automático)
+
+   o
+
+   python manage.py runserver (manual)
+
+Luego abre: http://localhost:8000/
+
+Si necesitas ayuda, revisa la terminal donde corre el servidor.
+TODOS los errores aparecerán ahí.
+
+¡Disfruta probando Riffly Music Platform! 🎵
+

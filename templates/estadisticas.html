@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Estadísticas - Riffly{% endblock %}
+
+{% block content %}
+<h1>📊 Estadísticas de Riffly</h1>
+
+<h2>🔥 Top 10 Canciones Más Reproducidas</h2>
+{% if top_songs %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Canción</th>
+                <th>Artista</th>
+                <th>Reproducciones</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in top_songs %}
+            <tr>
+                <td><strong>{{ forloop.counter }}</strong></td>
+                <td>{{ song.TITLE }}</td>
+                <td>{{ song.AUTHOR_NAME }}</td>
+                <td><span class="badge badge-success">{{ song.PLAYS_COUNT }} plays</span></td>
+                <td>
+                    <a href="{% url 'detalle_cancion' song.SONG_ID %}" class="btn btn-info" style="padding: 6px 12px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay datos de reproducciones aún.</p>
+{% endif %}
+
+<h2>❤️ Top 10 Canciones Más Gustadas</h2>
+{% if top_liked %}
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Canción</th>
+                <th>Artista</th>
+                <th>Likes</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in top_liked %}
+            <tr>
+                <td><strong>{{ forloop.counter }}</strong></td>
+                <td>{{ song.TITLE }}</td>
+                <td>{{ song.AUTHOR_NAME }}</td>
+                <td><span class="badge badge-danger">{{ song.LIKES_COUNT }} likes</span></td>
+                <td>
+                    <a href="{% url 'detalle_cancion' song.SONG_ID %}" class="btn btn-info" style="padding: 6px 12px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay datos de likes aún.</p>
+{% endif %}
+
+<h2>🎸 Géneros Más Populares</h2>
+{% if top_genres %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+        {% for genre in top_genres %}
+        <div class="stat-card">
+            <h3>{{ genre.SONG_COUNT }}</h3>
+            <p>{{ genre.NAME }}</p>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No hay géneros registrados aún.</p>
+{% endif %}
+
+<a href="{% url 'index' %}" class="btn btn-warning">⬅️ Volver al Dashboard</a>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Canciones - Riffly{% endblock %}
+
+{% block content %}
+<h1>🎵 Catálogo de Canciones</h1>
+
+<a href="{% url 'crear_cancion' %}" class="btn">➕ Agregar Nueva Canción</a>
+
+{% if canciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Artista</th>
+                <th>Duración</th>
+                <th>Descripción</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cancion in canciones %}
+            <tr>
+                <td>{{ cancion.SONG_ID }}</td>
+                <td><strong>{{ cancion.TITLE }}</strong></td>
+                <td>{{ cancion.AUTHOR_DISPLAY|default:cancion.AUTHOR_NAME }}</td>
+                <td>{{ cancion.DURATION_SEC }} seg</td>
+                <td>{{ cancion.DESCRIPTION|default:"-"|truncatewords:8 }}</td>
+                <td>{{ cancion.CREATED_AT|date:"d/m/Y" }}</td>
+                <td>
+                    <a href="{% url 'detalle_cancion' cancion.SONG_ID %}" class="btn btn-info" style="padding: 8px 15px; font-size: 14px;">Ver Detalles</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total de canciones:</strong> {{ canciones|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay canciones registradas. <a href="{% url 'crear_cancion' %}">Agrega la primera canción aquí</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
+

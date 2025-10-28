@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ playlist.NAME }} - Riffly{% endblock %}
+
+{% block content %}
+<h1>📋 {{ playlist.NAME }}</h1>
+
+<div class="card">
+    <p><strong>Propietario:</strong> {{ playlist.OWNER_DISPLAY|default:playlist.OWNER_NAME }}</p>
+    <p><strong>Visibilidad:</strong>
+        {% if playlist.IS_PUBLIC == 'Y' %}
+            <span class="badge badge-success">Pública</span>
+        {% else %}
+            <span class="badge badge-danger">Privada</span>
+        {% endif %}
+    </p>
+    <p><strong>Creada:</strong> {{ playlist.CREATED_AT|date:"d/m/Y H:i" }}</p>
+
+    {% if playlist.DESCRIPTION %}
+    <p><strong>Descripción:</strong></p>
+    <p style="font-style: italic; color: #666;">{{ playlist.DESCRIPTION }}</p>
+    {% endif %}
+</div>
+
+<h2>🎵 Canciones ({{ canciones|length }})</h2>
+{% if canciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>Posición</th>
+                <th>Título</th>
+                <th>Artista</th>
+                <th>Duración</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cancion in canciones %}
+            <tr>
+                <td><strong>{{ cancion.POSITION }}</strong></td>
+                <td>{{ cancion.TITLE }}</td>
+                <td>{{ cancion.AUTHOR_NAME }}</td>
+                <td>{{ cancion.DURATION_SEC }} seg</td>
+                <td>
+                    <a href="{% url 'detalle_cancion' cancion.SONG_ID %}" class="btn btn-info" style="padding: 6px 12px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Esta playlist no tiene canciones aún.</p>
+{% endif %}
+
+<a href="{% url 'lista_playlists' %}" class="btn btn-warning">⬅️ Volver a Lista</a>
+{% endblock %}
+

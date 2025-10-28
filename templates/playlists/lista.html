@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Playlists - Riffly{% endblock %}
+
+{% block content %}
+<h1>📋 Playlists Públicas</h1>
+
+<a href="{% url 'crear_playlist' %}" class="btn">➕ Crear Nueva Playlist</a>
+
+{% if playlists %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Propietario</th>
+                <th>Canciones</th>
+                <th>Descripción</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for playlist in playlists %}
+            <tr>
+                <td>{{ playlist.PLAYLIST_ID }}</td>
+                <td><strong>{{ playlist.NAME }}</strong></td>
+                <td>{{ playlist.OWNER_DISPLAY|default:playlist.OWNER_NAME }}</td>
+                <td><span class="badge badge-success">{{ playlist.SONG_COUNT }} canciones</span></td>
+                <td>{{ playlist.DESCRIPTION|default:"-"|truncatewords:10 }}</td>
+                <td>{{ playlist.CREATED_AT|date:"d/m/Y" }}</td>
+                <td>
+                    <a href="{% url 'detalle_playlist' playlist.PLAYLIST_ID %}" class="btn btn-info" style="padding: 8px 15px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total de playlists:</strong> {{ playlists|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay playlists registradas. <a href="{% url 'crear_playlist' %}">Crea la primera aquí</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
+

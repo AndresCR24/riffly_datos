@@ -1,0 +1,397 @@
+╔══════════════════════════════════════════════════════════════╗
+║           GUÍA COMPLETA PARA PROBAR EL PROYECTO              ║
+║                  RIFFLY MUSIC PLATFORM                       ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 MÉTODO 1: SCRIPT AUTOMÁTICO (MÁS FÁCIL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+En la terminal, ejecuta:
+
+   ./probar_proyecto.sh
+
+Este script automáticamente:
+✓ Verifica que cx_Oracle esté instalado
+✓ Te pide la contraseña y la configura
+✓ Prueba la conexión a Oracle
+✓ Verifica todos los archivos
+✓ Te muestra todas las URLs disponibles
+✓ Inicia el servidor Django
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 MÉTODO 2: PASO A PASO MANUAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PASO 1: Configurar Contraseña
+──────────────────────────────────────────────────────────────
+
+Abre el archivo: db_connection.py
+
+Busca la línea 13 que dice:
+   'password': 'tu_contraseña',
+
+Cámbiala por tu contraseña real de Oracle:
+   'password': 'MI_CONTRASEÑA_REAL',
+
+Guarda el archivo (Cmd+S en PyCharm)
+
+
+PASO 2: Probar la Conexión
+──────────────────────────────────────────────────────────────
+
+En la terminal ejecuta:
+
+   python db_connection.py
+
+✅ RESULTADO ESPERADO:
+   🔍 Probando conexión a Oracle (Riffly Music Platform)...
+      Usuario: riffly_m
+      DSN: localhost:1521/XE
+   --------------------------------------------------
+   ✅ Conexión exitosa!
+
+   📊 Estadísticas de la base de datos:
+      • USERS: X registros
+      • SONGS: X registros
+      • GENRES: X registros
+      • PLAYLISTS: X registros
+      • COMMENTS: X registros
+      • LIKES: X registros
+      • PLAYS: X registros
+      • FOLLOWS: X registros
+
+❌ SI HAY ERROR:
+   - Verifica que Oracle esté corriendo
+   - Verifica que la contraseña sea correcta
+   - Verifica que el usuario 'riffly_m' exista
+   - Verifica que las tablas estén creadas
+
+
+PASO 3: Iniciar el Servidor
+──────────────────────────────────────────────────────────────
+
+En la terminal ejecuta:
+
+   python manage.py runserver
+
+Verás algo como:
+   Starting development server at http://127.0.0.1:8000/
+   Quit the server with CONTROL-C.
+
+
+PASO 4: Abrir en el Navegador
+──────────────────────────────────────────────────────────────
+
+Abre tu navegador en:
+
+   http://localhost:8000/
+
+Deberías ver el Dashboard de Riffly con:
+✓ Estadísticas de usuarios, canciones, géneros y playlists
+✓ Lista de canciones más recientes
+✓ Tarjetas de acceso rápido a cada módulo
+✓ Navegación superior con todos los módulos
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 URLS PARA PROBAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🏠 DASHBOARD PRINCIPAL
+   http://localhost:8000/
+   - Estadísticas generales
+   - Canciones recientes
+   - Acceso rápido a módulos
+
+👥 USUARIOS
+   http://localhost:8000/usuarios/
+   - Ver lista de todos los usuarios
+
+   http://localhost:8000/usuarios/crear/
+   - Crear nuevo usuario (admin/artista/productor/aficionado)
+
+   http://localhost:8000/usuarios/1/
+   - Ver perfil de usuario (cambia el número)
+
+🎵 CANCIONES
+   http://localhost:8000/canciones/
+   - Ver catálogo de canciones
+
+   http://localhost:8000/canciones/crear/
+   - Agregar nueva canción
+
+   http://localhost:8000/canciones/1/
+   - Ver detalles de canción con géneros y comentarios
+
+🎸 GÉNEROS
+   http://localhost:8000/generos/
+   - Ver todos los géneros musicales
+
+   http://localhost:8000/generos/crear/
+   - Crear nuevo género
+
+📋 PLAYLISTS
+   http://localhost:8000/playlists/
+   - Ver playlists públicas
+
+   http://localhost:8000/playlists/crear/
+   - Crear nueva playlist
+
+   http://localhost:8000/playlists/1/
+   - Ver playlist con canciones
+
+💬 COMENTARIOS
+   http://localhost:8000/comentarios/
+   - Ver todos los comentarios recientes
+
+📊 ESTADÍSTICAS
+   http://localhost:8000/estadisticas/
+   - Top 10 canciones más reproducidas
+   - Top 10 canciones más gustadas
+   - Géneros más populares
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧪 FLUJO DE PRUEBA RECOMENDADO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. CREAR GÉNEROS
+   ────────────────────────────────────────────────────────
+   Ir a: http://localhost:8000/generos/crear/
+
+   Crear algunos géneros como:
+   ✓ Rock
+   ✓ Pop
+   ✓ Jazz
+   ✓ Electronic
+   ✓ Hip-Hop
+
+2. CREAR USUARIOS
+   ────────────────────────────────────────────────────────
+   Ir a: http://localhost:8000/usuarios/crear/
+
+   Crear usuarios con diferentes tipos:
+   ✓ Un admin
+   ✓ Varios artistas
+   ✓ Un productor
+   ✓ Algunos aficionados
+
+3. CREAR CANCIONES
+   ────────────────────────────────────────────────────────
+   Ir a: http://localhost:8000/canciones/crear/
+
+   Crear canciones asignando:
+   ✓ Título
+   ✓ Duración en segundos (ej: 180)
+   ✓ Autor (seleccionar un artista)
+   ✓ Compositor (opcional)
+   ✓ Descripción
+
+4. VER PERFILES
+   ────────────────────────────────────────────────────────
+   Ir a: http://localhost:8000/usuarios/
+
+   Haz clic en "Ver Perfil" de cualquier usuario para ver:
+   ✓ Sus canciones publicadas
+   ✓ Número de seguidores
+   ✓ Número de seguidos
+
+5. VER DETALLES DE CANCIONES
+   ────────────────────────────────────────────────────────
+   Ir a: http://localhost:8000/canciones/
+
+   Haz clic en "Ver Detalles" para ver:
+   ✓ Géneros de la canción
+   ✓ Comentarios
+   ✓ Número de likes
+   ✓ Número de reproducciones
+
+6. CREAR PLAYLISTS
+   ────────────────────────────────────────────────────────
+   Ir a: http://localhost:8000/playlists/crear/
+
+   Crear playlists:
+   ✓ Asignar propietario
+   ✓ Marcar como pública o privada
+   ✓ Agregar descripción
+
+7. VER ESTADÍSTICAS
+   ────────────────────────────────────────────────────────
+   Ir a: http://localhost:8000/estadisticas/
+
+   Ver los rankings:
+   ✓ Top 10 más reproducidas
+   ✓ Top 10 más gustadas
+   ✓ Géneros más populares
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎨 CARACTERÍSTICAS DEL DISEÑO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Al probar el proyecto verás:
+
+✓ Diseño moderno con gradientes violeta/púrpura
+✓ Navegación superior con emojis
+✓ Tarjetas con sombras y animaciones al pasar el mouse
+✓ Tablas estilizadas con hover effects
+✓ Botones con gradientes y efectos 3D
+✓ Badges de colores para estados
+✓ Formularios con validación visual
+✓ Estadísticas en tarjetas coloridas
+✓ Diseño responsive
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ SOLUCIÓN DE PROBLEMAS COMUNES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PROBLEMA: "Error de conexión a Oracle"
+SOLUCIÓN:
+   1. Verifica que Oracle esté corriendo:
+      - Abre PyCharm
+      - Ve a la pestaña de Database
+      - Verifica que la conexión "riffly_m" esté activa
+
+   2. Verifica la contraseña en db_connection.py
+
+   3. Intenta conectarte desde PyCharm SQL Console
+
+PROBLEMA: "Página en blanco o error 500"
+SOLUCIÓN:
+   1. Revisa la consola del servidor (terminal)
+   2. Verifica que las tablas existan en Oracle
+   3. Ejecuta: python db_connection.py para verificar
+
+PROBLEMA: "No se muestran datos"
+SOLUCIÓN:
+   Las tablas están vacías. Necesitas:
+   1. Crear usuarios primero
+   2. Crear géneros
+   3. Luego crear canciones
+   4. Finalmente crear playlists
+
+PROBLEMA: "cx_Oracle not found"
+SOLUCIÓN:
+   pip install cx_Oracle
+
+PROBLEMA: "Template not found"
+SOLUCIÓN:
+   Verifica que existan estas carpetas:
+   - templates/usuarios/
+   - templates/canciones/
+   - templates/generos/
+   - templates/playlists/
+   - templates/comentarios/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📸 CAPTURAS ESPERADAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DASHBOARD PRINCIPAL:
+✓ 4 tarjetas de estadísticas en la parte superior
+✓ Tabla con canciones más recientes
+✓ Botones de "Acciones Rápidas"
+✓ 4 tarjetas de módulos del sistema
+
+LISTA DE USUARIOS:
+✓ Tabla con: ID, Username, Nombre, Email, Tipo, Estado
+✓ Badges de colores para el tipo de usuario
+✓ Badge verde/rojo para activo/inactivo
+✓ Botón "Ver Perfil" en cada fila
+
+PERFIL DE USUARIO:
+✓ Card con información del usuario
+✓ 2 tarjetas mostrando seguidores y siguiendo
+✓ Tabla con todas las canciones del usuario
+
+LISTA DE CANCIONES:
+✓ Tabla con: ID, Título, Artista, Duración, Descripción
+✓ Botón "Ver Detalles" en cada canción
+
+DETALLES DE CANCIÓN:
+✓ Card con información de la canción
+✓ 2 tarjetas mostrando likes y reproducciones
+✓ Lista de géneros con badges
+✓ Lista de comentarios
+
+ESTADÍSTICAS:
+✓ Tabla Top 10 por reproducciones
+✓ Tabla Top 10 por likes
+✓ Tarjetas con géneros más populares
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ CHECKLIST DE PRUEBA COMPLETA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CONFIGURACIÓN:
+☐ Contraseña configurada en db_connection.py
+☐ Conexión a Oracle exitosa
+☐ Servidor Django iniciado
+
+NAVEGACIÓN:
+☐ Dashboard principal carga correctamente
+☐ Navegación superior funciona en todas las páginas
+☐ Todos los enlaces funcionan
+
+USUARIOS:
+☐ Ver lista de usuarios
+☐ Crear nuevo usuario
+☐ Ver perfil de usuario
+☐ Se muestran las canciones del usuario
+☐ Se muestran los contadores de seguidores
+
+CANCIONES:
+☐ Ver catálogo de canciones
+☐ Crear nueva canción
+☐ Ver detalles de canción
+☐ Se muestran los géneros asociados
+☐ Se muestran los comentarios
+☐ Se muestran likes y reproducciones
+
+GÉNEROS:
+☐ Ver lista de géneros
+☐ Crear nuevo género
+☐ Se muestra el conteo de canciones por género
+
+PLAYLISTS:
+☐ Ver lista de playlists
+☐ Crear nueva playlist
+☐ Ver detalles de playlist
+☐ Se muestran las canciones en orden
+
+COMENTARIOS:
+☐ Ver lista de comentarios
+☐ Se muestran usuario y fecha
+☐ Se muestra la canción comentada
+
+ESTADÍSTICAS:
+☐ Ver Top 10 por reproducciones
+☐ Ver Top 10 por likes
+☐ Ver géneros más populares
+
+DISEÑO:
+☐ Gradientes se ven correctamente
+☐ Hover effects funcionan
+☐ Botones tienen animaciones
+☐ Tablas son legibles
+☐ Formularios se ven bien
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 ¡LISTO PARA PROBAR!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ejecuta: ./probar_proyecto.sh
+
+O manualmente:
+1. Configura contraseña en db_connection.py
+2. python db_connection.py
+3. python manage.py runserver
+4. Abre http://localhost:8000/
+
+¡Disfruta probando Riffly Music Platform! 🎵
+

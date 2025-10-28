@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Comentarios Recientes - Riffly{% endblock %}
+
+{% block content %}
+<h1>💬 Comentarios Recientes</h1>
+
+{% if comentarios %}
+    <p><strong>Mostrando los últimos 50 comentarios</strong></p>
+
+    {% for comentario in comentarios %}
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: start;">
+            <div>
+                <p><strong>{{ comentario.DISPLAY_NAME|default:comentario.USERNAME }}</strong>
+                   comentó en
+                   <a href="{% url 'detalle_cancion' comentario.SONG_ID %}"><strong>{{ comentario.SONG_TITLE }}</strong></a>
+                </p>
+                <p style="margin-top: 10px;">{{ comentario.BODY }}</p>
+            </div>
+            <small style="color: #999; white-space: nowrap; margin-left: 15px;">
+                {{ comentario.CREATED_AT|date:"d/m/Y H:i" }}
+            </small>
+        </div>
+    </div>
+    {% endfor %}
+
+    <p style="margin-top: 20px;"><strong>Total de comentarios:</strong> {{ comentarios|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay comentarios aún. ¡Sé el primero en comentar una canción!</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'index' %}" class="btn btn-warning">⬅️ Volver al Dashboard</a>
+{% endblock %}
+

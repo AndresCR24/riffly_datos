@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Géneros Musicales - Riffly{% endblock %}
+
+{% block content %}
+<h1>🎸 Géneros Musicales</h1>
+
+<a href="{% url 'crear_genero' %}" class="btn">➕ Agregar Nuevo Género</a>
+
+{% if generos %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Slug</th>
+                <th>Canciones</th>
+                <th>Fecha Creación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for genero in generos %}
+            <tr>
+                <td>{{ genero.GENRE_ID }}</td>
+                <td><strong>{{ genero.NAME }}</strong></td>
+                <td><code>{{ genero.SLUG }}</code></td>
+                <td><span class="badge badge-success">{{ genero.SONG_COUNT }} canciones</span></td>
+                <td>{{ genero.CREATED_AT|date:"d/m/Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total de géneros:</strong> {{ generos|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay géneros registrados. <a href="{% url 'crear_genero' %}">Crea el primero aquí</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
+

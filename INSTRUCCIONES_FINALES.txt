@@ -1,0 +1,176 @@
+╔════════════════════════════════════════════════════════════════╗
+║  PROYECTO DJANGO + ORACLE SIN ORM - CONFIGURACIÓN COMPLETA    ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ INSTALACIÓN COMPLETADA:
+   • cx_Oracle 8.3.0 instalado correctamente
+   • Proyecto configurado para conexión directa (SIN ORM)
+   • Detectada tu base de datos: riffly_m@localhost:1521/XE
+
+════════════════════════════════════════════════════════════════
+
+🚀 PASOS PARA EJECUTAR (3 pasos simples):
+
+┌────────────────────────────────────────────────────────────────┐
+│ PASO 1: CONFIGURAR CONTRASEÑA                                 │
+└────────────────────────────────────────────────────────────────┘
+
+Edita el archivo: db_connection.py (línea 13)
+
+Cambia:
+   'password': 'tu_contraseña',
+
+Por:
+   'password': 'tu_contraseña_real_de_riffly_m',
+
+┌────────────────────────────────────────────────────────────────┐
+│ PASO 2: CREAR TABLAS EN ORACLE                                │
+└────────────────────────────────────────────────────────────────┘
+
+En PyCharm:
+   1. Abre el archivo: crear_tablas.sql
+   2. Asegúrate de estar conectado a riffly_m (tu conexión actual)
+   3. Selecciona todo el contenido (Cmd+A)
+   4. Ejecuta el script (botón verde "Execute" o Ctrl+Enter)
+
+Esto creará:
+   ✓ Tabla PRODUCTOS
+   ✓ Tabla CLIENTES
+   ✓ Secuencias para IDs automáticos
+   ✓ 3 productos de ejemplo
+   ✓ 3 clientes de ejemplo
+
+┌────────────────────────────────────────────────────────────────┐
+│ PASO 3: INICIAR EL SERVIDOR                                   │
+└────────────────────────────────────────────────────────────────┘
+
+En la terminal:
+   python manage.py runserver
+
+Luego abre tu navegador en:
+   http://localhost:8000/
+
+════════════════════════════════════════════════════════════════
+
+🧪 PROBAR LA CONEXIÓN (Opcional):
+
+Antes de iniciar el servidor, puedes probar la conexión:
+
+   python db_connection.py
+
+Deberías ver:
+   ✅ Conexión exitosa!
+   📊 Versión de Oracle: Oracle Database 21c Express Edition...
+
+════════════════════════════════════════════════════════════════
+
+📂 ARCHIVOS IMPORTANTES:
+
+┌─────────────────────────┬──────────────────────────────────────┐
+│ Archivo                 │ Descripción                          │
+├─────────────────────────┼──────────────────────────────────────┤
+│ db_connection.py        │ Conexión a Oracle (configurar aquí) │
+│ crear_tablas.sql        │ Script para crear tablas             │
+│ myapp/views.py          │ Vistas con SQL directo               │
+│ SIN_ORM_README.md       │ Documentación completa               │
+└─────────────────────────┴──────────────────────────────────────┘
+
+════════════════════════════════════════════════════════════════
+
+🌐 URLs DISPONIBLES:
+
+/                       → Página principal
+/productos/             → Ver lista de productos
+/productos/crear/       → Crear nuevo producto
+/clientes/              → Ver lista de clientes
+/clientes/crear/        → Crear nuevo cliente
+
+════════════════════════════════════════════════════════════════
+
+💡 CÓMO FUNCIONA (SIN ORM):
+
+ANTES (con ORM):
+   ❌ productos = Producto.objects.all()
+
+AHORA (SQL directo):
+   ✅ query = "SELECT * FROM PRODUCTOS"
+   ✅ productos = execute_query(query)
+
+════════════════════════════════════════════════════════════════
+
+📊 ESTRUCTURA DE LAS TABLAS:
+
+PRODUCTOS:
+   • ID (NUMBER, auto-increment)
+   • NOMBRE (VARCHAR2 100)
+   • PRECIO (NUMBER 10,2)
+   • DESCRIPCION (CLOB)
+   • FECHA_CREACION (TIMESTAMP)
+
+CLIENTES:
+   • ID (NUMBER, auto-increment)
+   • NOMBRE (VARCHAR2 100)
+   • EMAIL (VARCHAR2 100, único)
+   • TELEFONO (VARCHAR2 20)
+   • DIRECCION (VARCHAR2 500)
+   • FECHA_REGISTRO (TIMESTAMP)
+
+════════════════════════════════════════════════════════════════
+
+✅ VERIFICACIÓN RÁPIDA:
+
+Después de crear las tablas, verifica en PyCharm:
+
+   SELECT COUNT(*) FROM PRODUCTOS;  -- Debe retornar 3
+   SELECT COUNT(*) FROM CLIENTES;   -- Debe retornar 3
+
+════════════════════════════════════════════════════════════════
+
+🎯 RESUMEN DE COMANDOS:
+
+# 1. Configurar contraseña
+vim db_connection.py  # o usar PyCharm
+
+# 2. Ejecutar SQL en PyCharm
+# (abrir crear_tablas.sql y ejecutar)
+
+# 3. Probar conexión (opcional)
+python db_connection.py
+
+# 4. Iniciar servidor
+python manage.py runserver
+
+# 5. Abrir navegador
+open http://localhost:8000/
+
+════════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANTE:
+
+• NO uses python manage.py migrate (no hay migraciones)
+• NO uses python manage.py makemigrations (no hay modelos)
+• Las tablas se crean directamente con crear_tablas.sql
+• Toda la lógica usa SQL nativo de Oracle
+
+════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTACIÓN ADICIONAL:
+
+• SIN_ORM_README.md - Guía completa sin ORM
+• crear_tablas.sql - Script SQL de creación
+• db_connection.py - Documentación de funciones
+
+════════════════════════════════════════════════════════════════
+
+🎉 ¡TODO LISTO!
+
+El proyecto está completamente configurado para conectarse
+directamente a tu base de datos Oracle (riffly_m) sin usar ORM.
+
+Solo falta:
+1. Configurar tu contraseña en db_connection.py
+2. Ejecutar crear_tablas.sql en PyCharm
+3. Iniciar el servidor
+
+════════════════════════════════════════════════════════════════
+

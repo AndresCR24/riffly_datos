@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Usuarios - Riffly{% endblock %}
+
+{% block content %}
+<h1>👥 Lista de Usuarios</h1>
+
+<a href="{% url 'crear_usuario' %}" class="btn">➕ Crear Nuevo Usuario</a>
+
+{% if usuarios %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Fecha Registro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.USER_ID }}</td>
+                <td><strong>@{{ usuario.USERNAME }}</strong></td>
+                <td>{{ usuario.DISPLAY_NAME|default:"-" }}</td>
+                <td>{{ usuario.EMAIL }}</td>
+                <td><span class="badge badge-primary">{{ usuario.USER_TYPE }}</span></td>
+                <td>
+                    {% if usuario.IS_ACTIVE == 'Y' %}
+                        <span class="badge badge-success">Activo</span>
+                    {% else %}
+                        <span class="badge badge-danger">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td>{{ usuario.CREATED_AT|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'detalle_usuario' usuario.USER_ID %}" class="btn btn-info" style="padding: 8px 15px; font-size: 14px;">Ver Perfil</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total de usuarios:</strong> {{ usuarios|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay usuarios registrados. <a href="{% url 'crear_usuario' %}">Crea el primero aquí</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
+

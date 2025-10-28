@@ -1,0 +1,180 @@
+╔══════════════════════════════════════════════════════════════╗
+║           INICIO RÁPIDO - RIFFLY MUSIC PLATFORM              ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎯 3 PASOS PARA EJECUTAR:
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ PASO 1: Configurar Contraseña                              ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+Archivo: db_connection.py (línea 13)
+
+Cambia:
+   'password': 'tu_contraseña',
+
+Por tu contraseña real de riffly_m
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ PASO 2: Verificar Conexión                                 ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+En la terminal:
+
+   python db_connection.py
+
+Resultado esperado:
+   ✅ Conexión exitosa!
+   📊 Estadísticas de la base de datos:
+      • USERS: X registros
+      • SONGS: X registros
+      • GENRES: X registros
+      ...
+
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ PASO 3: Iniciar Servidor                                   ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+En la terminal:
+
+   python manage.py runserver
+
+Luego abre tu navegador en:
+
+   http://localhost:8000/
+
+══════════════════════════════════════════════════════════════
+
+✅ LO QUE SE HA CONFIGURADO:
+
+Backend:
+✓ db_connection.py - Conexión directa a Oracle sin ORM
+✓ myapp/views.py - 14 vistas con consultas SQL
+✓ DjangoProject/urls.py - 13 rutas configuradas
+
+Templates (16 archivos HTML):
+✓ index.html - Dashboard con estadísticas
+✓ estadisticas.html - Rankings y métricas
+✓ usuarios/ - Lista, crear, detalle
+✓ canciones/ - Lista, crear, detalle
+✓ generos/ - Lista, crear
+✓ playlists/ - Lista, crear, detalle
+✓ comentarios/ - Lista
+
+Diseño:
+✓ base.html - Template base con gradientes modernos
+✓ Responsive design
+✓ Navegación completa
+✓ Estilos con animaciones
+
+══════════════════════════════════════════════════════════════
+
+🌐 URLs DISPONIBLES:
+
+/                       → Dashboard principal
+/usuarios/              → Lista de usuarios
+/usuarios/crear/        → Crear usuario
+/usuarios/<id>/         → Perfil de usuario
+/canciones/             → Catálogo de canciones
+/canciones/crear/       → Crear canción
+/canciones/<id>/        → Detalles de canción
+/generos/               → Lista de géneros
+/generos/crear/         → Crear género
+/playlists/             → Lista de playlists
+/playlists/crear/       → Crear playlist
+/playlists/<id>/        → Detalles de playlist
+/comentarios/           → Comentarios recientes
+/estadisticas/          → Rankings y estadísticas
+
+══════════════════════════════════════════════════════════════
+
+📊 TABLAS DE TU BD IMPLEMENTADAS:
+
+✓ USERS              - Gestión completa de usuarios
+✓ SONGS              - CRUD de canciones
+✓ GENRES             - CRUD de géneros
+✓ PLAYLISTS          - CRUD de playlists
+✓ COMMENTS           - Visualización
+✓ LIKES              - Conteo en detalles
+✓ PLAYS              - Conteo en detalles
+✓ FOLLOWS            - Conteo en perfiles
+✓ PLAYLIST_SONGS     - En detalles de playlist
+✓ SONG_GENRES        - En detalles de canción
+
+══════════════════════════════════════════════════════════════
+
+⚡ CARACTERÍSTICAS:
+
+• Sin ORM - SQL directo con cx_Oracle
+• 14 vistas funcionales
+• 16 templates HTML
+• Dashboard con estadísticas en tiempo real
+• Top 10 canciones más reproducidas
+• Top 10 canciones más gustadas
+• Géneros más populares
+• Perfiles de usuario con canciones y seguidores
+• Detalles de canciones con comentarios y likes
+• Diseño moderno con gradientes
+
+══════════════════════════════════════════════════════════════
+
+🎯 FLUJO RECOMENDADO DE PRUEBA:
+
+1. Crear usuarios (tipos: artista, productor, aficionado, admin)
+2. Crear géneros (Rock, Pop, Jazz, etc.)
+3. Crear canciones asignando autor y compositor
+4. Crear playlists
+5. Ver estadísticas
+
+══════════════════════════════════════════════════════════════
+
+🔧 SOLUCIÓN DE PROBLEMAS:
+
+❌ Error de conexión:
+   → Verifica la contraseña en db_connection.py
+
+❌ "Table or view does not exist":
+   → Las tablas deben existir en Oracle
+   → Ejecuta el script de creación si no existen
+
+❌ "cx_Oracle not found":
+   → pip install cx_Oracle
+
+❌ Página en blanco:
+   → Verifica que Oracle esté corriendo
+   → Revisa la consola del servidor
+
+══════════════════════════════════════════════════════════════
+
+📝 NOTAS IMPORTANTES:
+
+• NO uses manage.py migrate (no hay modelos ORM)
+• Las tablas YA DEBEN EXISTIR en Oracle
+• Todas las contraseñas se guardan en texto plano (demo)
+• En producción, implementa hashing de contraseñas
+
+══════════════════════════════════════════════════════════════
+
+📚 DOCUMENTACIÓN:
+
+• RIFFLY_README.txt - Documentación completa
+• SIN_ORM_README.md - Guía sin ORM
+• db_connection.py - Funciones documentadas
+
+══════════════════════════════════════════════════════════════
+
+🎉 ¡PROYECTO LISTO!
+
+Todo el backend y templates están adaptados a tu esquema
+de base de datos Riffly Music Platform.
+
+Configuración detectada:
+• Base de datos: riffly_m
+• Host: localhost:1521
+• SID: XE
+• Driver: cx_Oracle 8.3.0
+
+Solo configura tu contraseña y ejecuta el servidor.
+
+══════════════════════════════════════════════════════════════
+

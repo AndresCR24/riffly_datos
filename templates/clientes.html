@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Clientes{% endblock %}
+
+{% block content %}
+<h1>👥 Lista de Clientes</h1>
+
+<a href="{% url 'crear_cliente' %}" class="btn">➕ Agregar Nuevo Cliente</a>
+
+{% if clientes %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Fecha de Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.ID }}</td>
+                <td><strong>{{ cliente.NOMBRE }}</strong></td>
+                <td>{{ cliente.EMAIL }}</td>
+                <td>{{ cliente.TELEFONO }}</td>
+                <td>{{ cliente.DIRECCION|truncatewords:8 }}</td>
+                <td>{{ cliente.FECHA_REGISTRO }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total de clientes:</strong> {{ clientes|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay clientes registrados. <a href="{% url 'crear_cliente' %}">Crea el primero aquí</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}

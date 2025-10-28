@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ usuario.DISPLAY_NAME|default:usuario.USERNAME }} - Riffly{% endblock %}
+
+{% block content %}
+<h1>👤 Perfil de Usuario</h1>
+
+<div class="card">
+    <h2>{{ usuario.DISPLAY_NAME|default:usuario.USERNAME }}</h2>
+    <p><strong>Username:</strong> @{{ usuario.USERNAME }}</p>
+    <p><strong>Email:</strong> {{ usuario.EMAIL }}</p>
+    <p><strong>Tipo:</strong> <span class="badge badge-primary">{{ usuario.USER_TYPE }}</span></p>
+    <p><strong>Estado:</strong>
+        {% if usuario.IS_ACTIVE == 'Y' %}
+            <span class="badge badge-success">Activo</span>
+        {% else %}
+            <span class="badge badge-danger">Inactivo</span>
+        {% endif %}
+    </p>
+    <p><strong>Miembro desde:</strong> {{ usuario.CREATED_AT|date:"d/m/Y" }}</p>
+
+    {% if usuario.BIO %}
+    <p><strong>Biografía:</strong></p>
+    <p style="font-style: italic; color: #666;">{{ usuario.BIO }}</p>
+    {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+    <div class="stat-card">
+        <h3>{{ seguidores }}</h3>
+        <p>👥 Seguidores</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ siguiendo }}</h3>
+        <p>➕ Siguiendo</p>
+    </div>
+</div>
+
+<h2>🎵 Canciones Publicadas ({{ canciones|length }})</h2>
+{% if canciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Duración</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cancion in canciones %}
+            <tr>
+                <td>{{ cancion.SONG_ID }}</td>
+                <td><strong>{{ cancion.TITLE }}</strong></td>
+                <td>{{ cancion.DURATION_SEC }} seg</td>
+                <td>{{ cancion.CREATED_AT|date:"d/m/Y" }}</td>
+                <td>
+                    <a href="{% url 'detalle_cancion' cancion.SONG_ID %}" class="btn btn-info" style="padding: 6px 12px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Este usuario no ha publicado canciones aún.</p>
+{% endif %}
+
+<a href="{% url 'lista_usuarios' %}" class="btn btn-warning">⬅️ Volver a Lista</a>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Lista de Usuarios - Riffly{% endblock %}
+
+{% block content %}
+<h1>👥 Lista de Usuarios</h1>
+
+<a href="{% url 'crear_usuario' %}" class="btn">➕ Crear Nuevo Usuario</a>
+
+{% if usuarios %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Fecha Registro</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.USER_ID }}</td>
+                <td><strong>{{ usuario.USERNAME }}</strong></td>
+                <td>{{ usuario.DISPLAY_NAME|default:"-" }}</td>
+                <td>{{ usuario.EMAIL }}</td>
+                <td>
+                    <span class="badge badge-primary">{{ usuario.USER_TYPE }}</span>
+                </td>
+                <td>
+                    {% if usuario.IS_ACTIVE == 'Y' %}
+                        <span class="badge badge-success">Activo</span>
+                    {% else %}
+                        <span class="badge badge-danger">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td>{{ usuario.CREATED_AT|date:"d/m/Y" }}</td>
+                <td>
+                    <a href="{% url 'detalle_usuario' usuario.USER_ID %}" class="btn btn-info" style="padding: 8px 15px; font-size: 14px;">Ver Perfil</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total de usuarios:</strong> {{ usuarios|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay usuarios registrados. <a href="{% url 'crear_usuario' %}">Crea el primero aquí</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Riffly Music Platform{% endblock %}
+
+{% block content %}
+<h1>🎵 Riffly Music Platform</h1>
+
+<div class="alert alert-info">
+    <strong>¡Bienvenido!</strong> Panel de administración de Riffly - Plataforma de música colaborativa
+</div>
+
+<h2>📊 Estadísticas Generales</h2>
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>{{ stats.total_users }}</h3>
+        <p>👥 Usuarios Registrados</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.total_songs }}</h3>
+        <p>🎵 Canciones</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.total_genres }}</h3>
+        <p>🎸 Géneros Musicales</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ stats.total_playlists }}</h3>
+        <p>📋 Playlists</p>
+    </div>
+</div>
+
+<h2>🆕 Canciones Más Recientes</h2>
+{% if recent_songs %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Artista</th>
+                <th>Duración</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in recent_songs %}
+            <tr>
+                <td>{{ song.SONG_ID }}</td>
+                <td><strong>{{ song.TITLE }}</strong></td>
+                <td>{{ song.AUTHOR_DISPLAY|default:song.AUTHOR_NAME }}</td>
+                <td>{{ song.DURATION_SEC }} seg</td>
+                <td>{{ song.CREATED_AT|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'detalle_cancion' song.SONG_ID %}" class="btn btn-info" style="padding: 6px 12px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay canciones registradas aún.</p>
+{% endif %}
+
+<h2>🚀 Acciones Rápidas</h2>
+<div style="margin-top: 20px;">
+    <a href="{% url 'crear_usuario' %}" class="btn">➕ Nuevo Usuario</a>
+    <a href="{% url 'crear_cancion' %}" class="btn btn-success">🎵 Nueva Canción</a>
+    <a href="{% url 'crear_genero' %}" class="btn btn-info">🎸 Nuevo Género</a>
+    <a href="{% url 'crear_playlist' %}" class="btn btn-warning">📋 Nueva Playlist</a>
+</div>
+
+<h2>📋 Módulos del Sistema</h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+    <div class="card">
+        <h3>👥 Gestión de Usuarios</h3>
+        <p>Administra usuarios, perfiles de artistas, productores y aficionados.</p>
+        <a href="{% url 'lista_usuarios' %}" class="btn">Ver Usuarios</a>
+    </div>
+
+    <div class="card">
+        <h3>🎵 Catálogo Musical</h3>
+        <p>Gestiona canciones, compositores y colaboradores.</p>
+        <a href="{% url 'lista_canciones' %}" class="btn">Ver Canciones</a>
+    </div>
+
+    <div class="card">
+        <h3>📋 Playlists</h3>
+        <p>Administra playlists públicas y privadas.</p>
+        <a href="{% url 'lista_playlists' %}" class="btn">Ver Playlists</a>
+    </div>
+
+    <div class="card">
+        <h3>📊 Estadísticas</h3>
+        <p>Visualiza rankings, reproducciones y métricas.</p>
+        <a href="{% url 'estadisticas' %}" class="btn">Ver Estadísticas</a>
+    </div>
+</div>
+{% endblock %}

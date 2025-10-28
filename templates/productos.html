@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Productos{% endblock %}
+
+{% block content %}
+<h1>📦 Lista de Productos</h1>
+
+<a href="{% url 'crear_producto' %}" class="btn">➕ Agregar Nuevo Producto</a>
+
+{% if productos %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Descripción</th>
+                <th>Fecha de Creación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.ID }}</td>
+                <td><strong>{{ producto.NOMBRE }}</strong></td>
+                <td>${{ producto.PRECIO }}</td>
+                <td>{{ producto.DESCRIPCION|truncatewords:10 }}</td>
+                <td>{{ producto.FECHA_CREACION }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total de productos:</strong> {{ productos|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay productos registrados. <a href="{% url 'crear_producto' %}">Crea el primero aquí</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}

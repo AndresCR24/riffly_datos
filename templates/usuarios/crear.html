@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Usuario - Riffly{% endblock %}
+
+{% block content %}
+<h1>➕ Crear Nuevo Usuario</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="username">Username: *</label>
+        <input type="text" id="username" name="username" required placeholder="nombre_usuario">
+    </div>
+
+    <div class="form-group">
+        <label for="email">Email: *</label>
+        <input type="email" id="email" name="email" required placeholder="usuario@ejemplo.com">
+    </div>
+
+    <div class="form-group">
+        <label for="password">Contraseña: *</label>
+        <input type="password" id="password" name="password" required placeholder="Mínimo 8 caracteres">
+        <small style="color: #666;">En producción, esta contraseña se hasheará automáticamente</small>
+    </div>
+
+    <div class="form-group">
+        <label for="display_name">Nombre para Mostrar:</label>
+        <input type="text" id="display_name" name="display_name" placeholder="Nombre Completo">
+    </div>
+
+    <div class="form-group">
+        <label for="user_type">Tipo de Usuario: *</label>
+        <select id="user_type" name="user_type" required>
+            <option value="">Seleccionar...</option>
+            <option value="admin">Administrador</option>
+            <option value="artista">Artista</option>
+            <option value="productor">Productor</option>
+            <option value="aficionado">Aficionado</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="bio">Biografía:</label>
+        <textarea id="bio" name="bio" placeholder="Cuéntanos sobre ti..." maxlength="250"></textarea>
+        <small style="color: #666;">Máximo 250 caracteres</small>
+    </div>
+
+    <button type="submit" class="btn">💾 Crear Usuario</button>
+    <a href="{% url 'lista_usuarios' %}" class="btn btn-warning">❌ Cancelar</a>
+</form>
+{% endblock %}
+

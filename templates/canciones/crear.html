@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Canción - Riffly{% endblock %}
+
+{% block content %}
+<h1>🎵 Agregar Nueva Canción</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="title">Título de la Canción: *</label>
+        <input type="text" id="title" name="title" required placeholder="Nombre de la canción" maxlength="150">
+    </div>
+
+    <div class="form-group">
+        <label for="duration_sec">Duración (segundos): *</label>
+        <input type="number" id="duration_sec" name="duration_sec" required min="1" placeholder="180">
+        <small style="color: #666;">Duración en segundos (ej: 180 = 3 minutos)</small>
+    </div>
+
+    <div class="form-group">
+        <label for="author_id">Artista/Autor: *</label>
+        <select id="author_id" name="author_id" required>
+            <option value="">Seleccionar artista...</option>
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.USER_ID }}">
+                    {{ usuario.DISPLAY_NAME|default:usuario.USERNAME }} (@{{ usuario.USERNAME }})
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="composer_id">Compositor (opcional):</label>
+        <select id="composer_id" name="composer_id">
+            <option value="">Mismo que el autor</option>
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.USER_ID }}">
+                    {{ usuario.DISPLAY_NAME|default:usuario.USERNAME }} (@{{ usuario.USERNAME }})
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Descripción:</label>
+        <textarea id="description" name="description" placeholder="Describe esta canción..." maxlength="150"></textarea>
+        <small style="color: #666;">Máximo 150 caracteres</small>
+    </div>
+
+    <button type="submit" class="btn">💾 Crear Canción</button>
+    <a href="{% url 'lista_canciones' %}" class="btn btn-warning">❌ Cancelar</a>
+</form>
+
+{% if not usuarios %}
+    <div class="alert alert-info" style="margin-top: 20px;">
+        <p><strong>Nota:</strong> No hay artistas o productores registrados. <a href="{% url 'crear_usuario' %}">Crea un usuario primero</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
+

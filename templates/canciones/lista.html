@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Canciones - Riffly{% endblock %}
+
+{% block content %}
+<h1>🎵 Catálogo de Canciones</h1>
+
+<a href="{% url 'crear_cancion' %}" class="btn">➕ Agregar Nueva Canción</a>
+
+{% if canciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Artista</th>
+                <th>Duración</th>
+                <th>Descripción</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cancion in canciones %}
+            <tr>
+                <td>{{ cancion.SONG_ID }}</td>
+                <td><strong>{{ cancion.TITLE }}</strong></td>
+                <td>{{ cancion.AUTHOR_DISPLAY|default:cancion.AUTHOR_NAME }}</td>
+                <td>{{ cancion.DURATION_SEC }} seg</td>
+                <td>{{ cancion.DESCRIPTION|default:"-"|truncatewords:8 }}</td>
+                <td>{{ cancion.CREATED_AT|date:"d/m/Y" }}</td>
+                <td>
+                    <a href="{% url 'detalle_cancion' cancion.SONG_ID %}" class="btn btn-info" style="padding: 8px 15px; font-size: 14px;">Ver Detalles</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total de canciones:</strong> {{ canciones|length }}</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay canciones registradas. <a href="{% url 'crear_cancion' %}">Crea la primera aquí</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}
+

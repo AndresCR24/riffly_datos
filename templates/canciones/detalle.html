@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ cancion.TITLE }} - Riffly{% endblock %}
+
+{% block content %}
+<h1>🎵 {{ cancion.TITLE }}</h1>
+
+<div class="card">
+    <p><strong>Artista:</strong>
+        <a href="{% url 'detalle_usuario' cancion.AUTHOR_ID %}">
+            {{ cancion.AUTHOR_DISPLAY|default:cancion.AUTHOR_NAME }}
+        </a>
+    </p>
+    <p><strong>Duración:</strong> {{ cancion.DURATION_SEC }} segundos
+        {% widthratio cancion.DURATION_SEC 60 1 %}:{% widthratio cancion.DURATION_SEC 60 1|stringformat:"02d" %}
+    </p>
+    <p><strong>Publicada:</strong> {{ cancion.CREATED_AT|date:"d/m/Y H:i" }}</p>
+
+    {% if cancion.DESCRIPTION %}
+    <p><strong>Descripción:</strong></p>
+    <p style="font-style: italic; color: #666;">{{ cancion.DESCRIPTION }}</p>
+    {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 20px 0;">
+    <div class="stat-card">
+        <h3>{{ total_likes }}</h3>
+        <p>❤️ Likes</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ total_plays }}</h3>
+        <p>▶️ Reproducciones</p>
+    </div>
+</div>
+
+<h2>🎸 Géneros</h2>
+{% if generos %}
+    <div style="margin: 15px 0;">
+        {% for genero in generos %}
+            <span class="badge badge-primary" style="margin: 5px; padding: 8px 15px; font-size: 14px;">{{ genero.NAME }}</span>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Sin géneros asignados</p>
+{% endif %}
+
+<h2>💬 Comentarios ({{ comentarios|length }})</h2>
+{% if comentarios %}
+    {% for comentario in comentarios %}
+    <div class="card">
+        <p><strong>{{ comentario.DISPLAY_NAME|default:comentario.USERNAME }}</strong>
+           <small style="color: #999;">{{ comentario.CREATED_AT|date:"d/m/Y H:i" }}</small>
+        </p>
+        <p>{{ comentario.BODY }}</p>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>No hay comentarios aún. ¡Sé el primero en comentar!</p>
+{% endif %}
+
+<a href="{% url 'lista_canciones' %}" class="btn btn-warning">⬅️ Volver a Lista</a>
+{% endblock %}

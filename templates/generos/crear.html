@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Género - Riffly{% endblock %}
+
+{% block content %}
+<h1>🎸 Agregar Nuevo Género Musical</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="name">Nombre del Género: *</label>
+        <input type="text" id="name" name="name" required placeholder="Rock, Pop, Jazz, etc." maxlength="60">
+    </div>
+
+    <div class="form-group">
+        <label for="slug">Slug (URL amigable):</label>
+        <input type="text" id="slug" name="slug" placeholder="rock, pop, jazz (se genera automáticamente)" maxlength="80">
+        <small style="color: #666;">Deja en blanco para generar automáticamente desde el nombre</small>
+    </div>
+
+    <button type="submit" class="btn">💾 Crear Género</button>
+    <a href="{% url 'lista_generos' %}" class="btn btn-warning">❌ Cancelar</a>
+</form>
+
+<div class="alert alert-info" style="margin-top: 30px;">
+    <h3>Ejemplos de géneros populares:</h3>
+    <p>Rock, Pop, Jazz, Blues, Country, Hip-Hop, Reggae, Electronic, Classical, R&B, Metal, Folk, Latin, Indie, Alternative</p>
+</div>
+{% endblock %}
+
