@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Playlists Públicas - Vista Optimizada{% endblock %}
+
+{% block content %}
+<h1>📋 Playlists Públicas (Vista Optimizada)</h1>
+
+<div class="alert alert-info">
+    <strong>📊 Vista de Oracle:</strong> vw_public_playlists - Solo playlists públicas con info del propietario
+</div>
+
+{% if playlists %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin: 20px 0;">
+        {% for playlist in playlists %}
+        <div class="card">
+            <h3>📋 {{ playlist.PLAYLIST_NAME }}</h3>
+            <p><strong>Propietario:</strong> {{ playlist.DISPLAY_NAME|default:playlist.USERNAME }}</p>
+
+            {% if playlist.DESCRIPTION %}
+            <p style="color: #666; font-style: italic;">{{ playlist.DESCRIPTION|truncatewords:20 }}</p>
+            {% endif %}
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <div>
+                    <span class="badge badge-success">{{ playlist.TOTAL_SONGS }} canciones</span>
+                </div>
+                <a href="{% url 'detalle_playlist' playlist.PLAYLIST_ID %}" class="btn btn-info" style="padding: 8px 15px; font-size: 14px;">Ver Playlist</a>
+            </div>
+
+            <p style="margin-top: 10px; font-size: 0.9em; color: #999;">
+                Creada: {{ playlist.CREATED_AT|date:"d/m/Y" }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <p><strong>Total:</strong> {{ playlists|length }} playlists públicas</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay playlists públicas disponibles. <a href="{% url 'crear_playlist' %}">Crea la primera aquí</a>.</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'index' %}" class="btn btn-warning">⬅️ Volver al Dashboard</a>
+{% endblock %}
+

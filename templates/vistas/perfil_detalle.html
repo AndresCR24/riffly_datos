@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ usuario.DISPLAY_NAME|default:usuario.USERNAME }} - Perfil Detallado{% endblock %}
+
+{% block content %}
+<h1>👤 Perfil Detallado de Usuario</h1>
+
+<div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+    <div style="display: flex; justify-content: space-between; align-items: start;">
+        <div>
+            <h2 style="color: white; border-bottom: none; padding-bottom: 0; margin-bottom: 10px;">{{ usuario.DISPLAY_NAME|default:usuario.USERNAME }}</h2>
+            <p style="font-size: 1.2em; margin: 0;">@{{ usuario.USERNAME }}</p>
+            <span class="badge" style="background-color: rgba(255,255,255,0.3); margin-top: 10px;">{{ usuario.USER_TYPE }}</span>
+        </div>
+        <div style="text-align: right;">
+            <p style="margin: 0; opacity: 0.9;">Miembro desde</p>
+            <p style="font-size: 1.1em; margin: 5px 0 0 0;">{{ usuario.CREATED_AT|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+
+    {% if usuario.BIO %}
+    <p style="margin-top: 20px; font-style: italic; opacity: 0.95;">{{ usuario.BIO }}</p>
+    {% endif %}
+</div>
+
+<h2>📊 Estadísticas de Actividad</h2>
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>{{ usuario.SONGS_CREATED }}</h3>
+        <p>🎵 Canciones Creadas</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ usuario.FOLLOWERS_COUNT }}</h3>
+        <p>👥 Seguidores</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ usuario.FOLLOWING_COUNT }}</h3>
+        <p>➕ Siguiendo</p>
+    </div>
+    <div class="stat-card">
+        <h3>{{ usuario.PLAYLISTS_CREATED }}</h3>
+        <p>📋 Playlists</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 20px 0;">
+    <div class="card" style="text-align: center;">
+        <h3 style="color: #f5576c; margin: 0;">{{ usuario.SONGS_LIKED }}</h3>
+        <p style="margin: 5px 0 0 0;">❤️ Canciones Gustadas</p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <h3 style="color: #38ef7d; margin: 0;">{{ usuario.TOTAL_PLAYS }}</h3>
+        <p style="margin: 5px 0 0 0;">▶️ Reproducciones</p>
+    </div>
+</div>
+
+<h2>🎵 Canciones de {{ usuario.USERNAME }} (Ordenadas por Popularidad)</h2>
+{% if canciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Géneros</th>
+                <th>❤️ Likes</th>
+                <th>▶️ Plays</th>
+                <th>Duración</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cancion in canciones %}
+            <tr>
+                <td><strong>{{ cancion.TITLE }}</strong></td>
+                <td>
+                    {% if cancion.GENRES %}
+                        <small>{{ cancion.GENRES }}</small>
+                    {% else %}
+                        <small style="color: #999;">-</small>
+                    {% endif %}
+                </td>
+                <td><span class="badge badge-danger">{{ cancion.TOTAL_LIKES }}</span></td>
+                <td><span class="badge badge-success">{{ cancion.TOTAL_PLAYS }}</span></td>
+                <td>{{ cancion.DURATION_SEC }}s</td>
+                <td>{{ cancion.CREATED_AT|date:"d/m/Y" }}</td>
+                <td>
+                    <a href="{% url 'detalle_cancion' cancion.SONG_ID %}" class="btn btn-info" style="padding: 6px 12px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">
+        <p>Este usuario no ha publicado canciones aún.</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'perfiles_usuarios' %}" class="btn btn-warning">⬅️ Volver a Perfiles</a>
+<a href="{% url 'detalle_usuario' usuario.USER_ID %}" class="btn btn-info">👤 Ver Perfil Simple</a>
+{% endblock %}
+{% extends 'base.html' %}
+
+{% block title %}Canciones Completas - Vista Optimizada{% endblock %}
+
+{% block content %}
+<h1>🎵 Canciones Completas (Vista Optimizada)</h1>
+
+<div class="alert alert-info">
+    <strong>📊 Vista de Oracle:</strong> vw_songs_complete - Datos pre-calculados con 4 JOINs
+</div>
+
+{% if canciones %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Artista</th>
+                <th>Compositor</th>
+                <th>Géneros</th>
+                <th>❤️ Likes</th>
+                <th>▶️ Plays</th>
+                <th>Duración</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cancion in canciones %}
+            <tr>
+                <td>{{ cancion.SONG_ID }}</td>
+                <td><strong>{{ cancion.TITLE }}</strong></td>
+                <td>{{ cancion.AUTHOR_DISPLAY_NAME|default:cancion.AUTHOR_USERNAME }}</td>
+                <td>{{ cancion.COMPOSER_DISPLAY_NAME|default:cancion.COMPOSER_USERNAME|default:"-" }}</td>
+                <td>
+                    {% if cancion.GENRES %}
+                        <small>{{ cancion.GENRES }}</small>
+                    {% else %}
+                        <small style="color: #999;">Sin géneros</small>
+                    {% endif %}
+                </td>
+                <td><span class="badge badge-danger">{{ cancion.TOTAL_LIKES }}</span></td>
+                <td><span class="badge badge-success">{{ cancion.TOTAL_PLAYS }}</span></td>
+                <td>{{ cancion.DURATION_SEC }}s</td>
+                <td>
+                    {% if cancion.IS_ACTIVE == 'Y' %}
+                        <span class="badge badge-success">Activa</span>
+                    {% else %}
+                        <span class="badge badge-danger">Inactiva</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'detalle_cancion' cancion.SONG_ID %}" class="btn btn-info" style="padding: 6px 12px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p><strong>Total:</strong> {{ canciones|length }} canciones</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay canciones disponibles.</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'index' %}" class="btn btn-warning">⬅️ Volver al Dashboard</a>
+{% endblock %}
+

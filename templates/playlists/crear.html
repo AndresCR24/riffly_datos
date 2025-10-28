@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Playlist - Riffly{% endblock %}
+
+{% block content %}
+<h1>📋 Crear Nueva Playlist</h1>
+
+{% if error %}
+<div class="alert" style="background-color: #ffebee; color: #c62828; border-left-color: #c62828;">
+    <strong>❌ Error:</strong> {{ error }}
+</div>
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <div class="form-group">
+        <label for="owner_id">Propietario: *</label>
+        <select id="owner_id" name="owner_id" required>
+            <option value="">Seleccionar usuario...</option>
+            {% for usuario in usuarios %}
+                <option value="{{ usuario.USER_ID }}">
+                    {{ usuario.DISPLAY_NAME|default:usuario.USERNAME }} (@{{ usuario.USERNAME }})
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="name">Nombre de la Playlist: *</label>
+        <input type="text" id="name" name="name" required placeholder="Mi Playlist Favorita" maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label for="description">Descripción:</label>
+        <textarea id="description" name="description" placeholder="Describe esta playlist..." maxlength="250"></textarea>
+        <small style="color: #666;">Máximo 250 caracteres</small>
+    </div>
+
+    <div class="form-group">
+        <label for="is_public">Visibilidad: *</label>
+        <select id="is_public" name="is_public" required>
+            <option value="Y" selected>Pública (todos pueden ver)</option>
+            <option value="N">Privada (solo el propietario)</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn">💾 Crear Playlist</button>
+    <a href="{% url 'lista_playlists' %}" class="btn btn-warning">❌ Cancelar</a>
+</form>
+
+{% if not usuarios %}
+    <div class="alert alert-info" style="margin-top: 20px;">
+        <p><strong>⚠️ Nota:</strong> No hay usuarios registrados. <a href="{% url 'crear_usuario' %}">Crea un usuario primero</a>.</p>
+    </div>
+{% endif %}
+{% endblock %}

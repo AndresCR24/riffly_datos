@@ -49,4 +49,11 @@ urlpatterns = [
 
     # Estadísticas
     path("estadisticas/", views.estadisticas, name="estadisticas"),
+
+    # Vistas de Oracle optimizadas
+    path("vistas/canciones/", views.canciones_completas, name="canciones_completas"),
+    path("vistas/playlists/", views.playlists_publicas, name="playlists_publicas"),
+    path("vistas/ranking/", views.ranking_canciones, name="ranking_canciones"),
+    path("vistas/perfiles/", views.perfiles_usuarios, name="perfiles_usuarios"),
+    path("vistas/perfiles/<int:user_id>/", views.perfil_usuario_detalle, name="perfil_usuario_detalle"),
 ]

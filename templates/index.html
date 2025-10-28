@@ -95,4 +95,35 @@
         <a href="{% url 'estadisticas' %}" class="btn">Ver Estadísticas</a>
     </div>
 </div>
+
+<h2>🚀 Vistas Optimizadas de Oracle</h2>
+<div class="alert alert-success">
+    <strong>✨ Nuevo:</strong> Vistas pre-calculadas con mejor rendimiento usando las vistas de Oracle
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 20px;">
+    <div class="card" style="border-left: 4px solid #667eea;">
+        <h3>🎵 Canciones Completas</h3>
+        <p>Vista optimizada con géneros, likes y plays pre-calculados.</p>
+        <a href="{% url 'canciones_completas' %}" class="btn btn-info">Ver Vista Optimizada</a>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #38ef7d;">
+        <h3>📋 Playlists Públicas</h3>
+        <p>Solo playlists públicas con información del propietario.</p>
+        <a href="{% url 'playlists_publicas' %}" class="btn btn-info">Ver Playlists</a>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #f5576c;">
+        <h3>🏆 Ranking Top 50</h3>
+        <p>Canciones más populares por score de popularidad.</p>
+        <a href="{% url 'ranking_canciones' %}" class="btn btn-info">Ver Ranking</a>
+    </div>
+
+    <div class="card" style="border-left: 4px solid #4facfe;">
+        <h3>👥 Perfiles Detallados</h3>
+        <p>Usuarios con estadísticas completas de actividad.</p>
+        <a href="{% url 'perfiles_usuarios' %}" class="btn btn-info">Ver Perfiles</a>
+    </div>
+</div>
 {% endblock %}

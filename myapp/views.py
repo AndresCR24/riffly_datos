@@ -266,19 +266,63 @@ def lista_playlists(request):
 def crear_playlist(request):
     """Crear una nueva playlist"""
     if request.method == 'POST':
-        query = """
-            INSERT INTO PLAYLISTS (OWNER_ID, NAME, DESCRIPTION, IS_PUBLIC, IS_DELETED)
-            VALUES (:owner_id, :name, :description, :is_public, 'N')
-        """
-        params = {
-            'owner_id': int(request.POST.get('owner_id')),
-            'name': request.POST.get('name'),
-            'description': request.POST.get('description', ''),
-            'is_public': request.POST.get('is_public', 'Y')
-        }
+        try:
+            owner_id = request.POST.get('owner_id')
+            name = request.POST.get('name')
+            description = request.POST.get('description', '')
+            is_public = request.POST.get('is_public', 'Y')
 
-        if execute_dml(query, params):
-            return redirect('lista_playlists')
+            # Validar que owner_id no esté vacío
+            if not owner_id:
+                # Si falla, recargar el formulario con mensaje de error
+                usuarios = execute_query("""
+                    SELECT USER_ID, USERNAME, DISPLAY_NAME
+                    FROM USERS
+                    WHERE IS_DELETED = 'N'
+                    ORDER BY USERNAME
+                """) or []
+                return render(request, 'playlists/crear.html', {
+                    'usuarios': usuarios,
+                    'error': 'Debe seleccionar un propietario'
+                })
+
+            query = """
+                INSERT INTO PLAYLISTS (OWNER_ID, NAME, DESCRIPTION, IS_PUBLIC, IS_DELETED)
+                VALUES (:owner_id, :name, :description, :is_public, 'N')
+            """
+            params = {
+                'owner_id': int(owner_id),
+                'name': name,
+                'description': description,
+                'is_public': is_public
+            }
+
+            if execute_dml(query, params):
+                return redirect('lista_playlists')
+            else:
+                # Si falla el DML, mostrar error
+                usuarios = execute_query("""
+                    SELECT USER_ID, USERNAME, DISPLAY_NAME
+                    FROM USERS
+                    WHERE IS_DELETED = 'N'
+                    ORDER BY USERNAME
+                """) or []
+                return render(request, 'playlists/crear.html', {
+                    'usuarios': usuarios,
+                    'error': 'Error al crear la playlist. Verifica los datos.'
+                })
+        except Exception as e:
+            # Capturar cualquier error
+            usuarios = execute_query("""
+                SELECT USER_ID, USERNAME, DISPLAY_NAME
+                FROM USERS
+                WHERE IS_DELETED = 'N'
+                ORDER BY USERNAME
+            """) or []
+            return render(request, 'playlists/crear.html', {
+                'usuarios': usuarios,
+                'error': f'Error: {str(e)}'
+            })
 
     # Obtener usuarios para el formulario
     usuarios = execute_query("""
@@ -389,4 +433,168 @@ def estadisticas(request):
         'top_songs': top_songs,
         'top_liked': top_liked,
         'top_genres': top_genres
+    })
+
+
+# ==================== VISTAS DE ORACLE ====================
+
+def canciones_completas(request):
+    """Vista optimizada usando vw_songs_complete"""
+    query = """
+        SELECT * FROM vw_songs_complete
+        ORDER BY created_at DESC
+    """
+    canciones = execute_query(query) or []
+    return render(request, 'vistas/canciones_completas.html', {'canciones': canciones})
+
+
+def playlists_publicas(request):
+    """Vista optimizada usando vw_public_playlists"""
+    query = """
+        SELECT * FROM vw_public_playlists
+        ORDER BY created_at DESC
+    """
+    playlists = execute_query(query) or []
+    return render(request, 'vistas/playlists_publicas.html', {'playlists': playlists})
+
+
+def ranking_canciones(request):
+    """Ranking de canciones usando vw_top_songs_ranking"""
+    query = """
+        SELECT * FROM vw_top_songs_ranking
+        FETCH FIRST 50 ROWS ONLY
+    """
+    ranking = execute_query(query) or []
+    return render(request, 'vistas/ranking_canciones.html', {'ranking': ranking})
+
+
+def perfiles_usuarios(request):
+    """Perfiles de usuarios con estadísticas"""
+    # Usar consulta directa más simple en lugar de la vista compleja
+    query = """
+        SELECT 
+            u.USER_ID,
+            u.USERNAME,
+            u.DISPLAY_NAME,
+            u.USER_TYPE,
+            u.BIO,
+            u.CREATED_AT,
+            COUNT(DISTINCT s.SONG_ID) as SONGS_CREATED,
+            COUNT(DISTINCT pl.PLAYLIST_ID) as PLAYLISTS_CREATED
+        FROM USERS u
+        LEFT JOIN SONGS s ON u.USER_ID = s.AUTHOR_ID AND s.IS_DELETED = 'N'
+        LEFT JOIN PLAYLISTS pl ON u.USER_ID = pl.OWNER_ID AND pl.IS_DELETED = 'N'
+        WHERE u.IS_DELETED = 'N' AND u.IS_ACTIVE = 'Y'
+        GROUP BY u.USER_ID, u.USERNAME, u.DISPLAY_NAME, u.USER_TYPE, u.BIO, u.CREATED_AT
+        ORDER BY SONGS_CREATED DESC, u.CREATED_AT DESC
+    """
+    usuarios = execute_query(query) or []
+
+    # Obtener estadísticas adicionales para cada usuario
+    for usuario in usuarios:
+        user_id = usuario['USER_ID']
+
+        # Seguidores y seguidos
+        usuario['FOLLOWERS_COUNT'] = execute_single(
+            "SELECT COUNT(*) FROM FOLLOWS WHERE FOLLOWEE_ID = :uid",
+            {'uid': user_id}
+        ) or 0
+
+        usuario['FOLLOWING_COUNT'] = execute_single(
+            "SELECT COUNT(*) FROM FOLLOWS WHERE FOLLOWER_ID = :uid",
+            {'uid': user_id}
+        ) or 0
+
+        # Likes dados
+        usuario['SONGS_LIKED'] = execute_single(
+            "SELECT COUNT(DISTINCT SONG_ID) FROM LIKES WHERE USER_ID = :uid",
+            {'uid': user_id}
+        ) or 0
+
+        # Total de plays
+        usuario['TOTAL_PLAYS'] = execute_single(
+            "SELECT COUNT(*) FROM PLAYS WHERE USER_ID = :uid",
+            {'uid': user_id}
+        ) or 0
+
+    return render(request, 'vistas/perfiles_usuarios.html', {'usuarios': usuarios})
+
+
+def perfil_usuario_detalle(request, user_id):
+    """Detalle de un usuario específico"""
+    # Consulta principal del usuario
+    query = """
+        SELECT 
+            u.USER_ID,
+            u.USERNAME,
+            u.DISPLAY_NAME,
+            u.USER_TYPE,
+            u.BIO,
+            u.CREATED_AT,
+            u.EMAIL
+        FROM USERS u
+        WHERE u.USER_ID = :user_id AND u.IS_DELETED = 'N'
+    """
+    usuario = execute_query(query, {'user_id': user_id})
+
+    if not usuario:
+        return redirect('perfiles_usuarios')
+
+    usuario = usuario[0]
+
+    # Estadísticas
+    usuario['SONGS_CREATED'] = execute_single(
+        "SELECT COUNT(*) FROM SONGS WHERE AUTHOR_ID = :uid AND IS_DELETED = 'N'",
+        {'uid': user_id}
+    ) or 0
+
+    usuario['PLAYLISTS_CREATED'] = execute_single(
+        "SELECT COUNT(*) FROM PLAYLISTS WHERE OWNER_ID = :uid AND IS_DELETED = 'N'",
+        {'uid': user_id}
+    ) or 0
+
+    usuario['FOLLOWERS_COUNT'] = execute_single(
+        "SELECT COUNT(*) FROM FOLLOWS WHERE FOLLOWEE_ID = :uid",
+        {'uid': user_id}
+    ) or 0
+
+    usuario['FOLLOWING_COUNT'] = execute_single(
+        "SELECT COUNT(*) FROM FOLLOWS WHERE FOLLOWER_ID = :uid",
+        {'uid': user_id}
+    ) or 0
+
+    usuario['SONGS_LIKED'] = execute_single(
+        "SELECT COUNT(DISTINCT SONG_ID) FROM LIKES WHERE USER_ID = :uid",
+        {'uid': user_id}
+    ) or 0
+
+    usuario['TOTAL_PLAYS'] = execute_single(
+        "SELECT COUNT(*) FROM PLAYS WHERE USER_ID = :uid",
+        {'uid': user_id}
+    ) or 0
+
+    # Obtener canciones del usuario con estadísticas
+    canciones = execute_query("""
+        SELECT 
+            s.SONG_ID,
+            s.TITLE,
+            s.DURATION_SEC,
+            s.CREATED_AT,
+            s.DESCRIPTION,
+            COUNT(DISTINCT l.USER_ID) as TOTAL_LIKES,
+            COUNT(DISTINCT p.PLAY_ID) as TOTAL_PLAYS,
+            LISTAGG(g.NAME, ', ') WITHIN GROUP (ORDER BY g.NAME) as GENRES
+        FROM SONGS s
+        LEFT JOIN LIKES l ON s.SONG_ID = l.SONG_ID
+        LEFT JOIN PLAYS p ON s.SONG_ID = p.SONG_ID
+        LEFT JOIN SONG_GENRES sg ON s.SONG_ID = sg.SONG_ID
+        LEFT JOIN GENRES g ON sg.GENRE_ID = g.GENRE_ID
+        WHERE s.AUTHOR_ID = :uid AND s.IS_DELETED = 'N'
+        GROUP BY s.SONG_ID, s.TITLE, s.DURATION_SEC, s.CREATED_AT, s.DESCRIPTION
+        ORDER BY TOTAL_LIKES DESC, TOTAL_PLAYS DESC
+    """, {'uid': user_id}) or []
+
+    return render(request, 'vistas/perfil_detalle.html', {
+        'usuario': usuario,
+        'canciones': canciones
     })

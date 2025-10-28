@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Ranking de Canciones - Top 50{% endblock %}
+
+{% block content %}
+<h1>🏆 Ranking de Canciones Más Populares</h1>
+
+<div class="alert alert-info">
+    <strong>📊 Vista de Oracle:</strong> vw_top_songs_ranking - Ranking por popularidad (plays, likes, comentarios)
+</div>
+
+{% if ranking %}
+    <div class="stats-grid" style="margin-bottom: 30px;">
+        <div class="stat-card">
+            <h3>{{ ranking|length }}</h3>
+            <p>🎵 Canciones en ranking</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ ranking.0.POPULARITY_SCORE|floatformat:0 }}</h3>
+            <p>⭐ Score máximo</p>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Canción</th>
+                <th>Artista</th>
+                <th>▶️ Plays</th>
+                <th>❤️ Likes</th>
+                <th>💬 Comentarios</th>
+                <th>⭐ Score Popularidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in ranking %}
+            <tr {% if forloop.counter <= 3 %}style="background-color: #fff9e6;"{% endif %}>
+                <td>
+                    <strong style="font-size: 1.2em;">
+                        {% if forloop.counter == 1 %}🥇
+                        {% elif forloop.counter == 2 %}🥈
+                        {% elif forloop.counter == 3 %}🥉
+                        {% else %}{{ forloop.counter }}
+                        {% endif %}
+                    </strong>
+                </td>
+                <td><strong>{{ song.TITLE }}</strong></td>
+                <td>{{ song.AUTHOR_USERNAME }}</td>
+                <td><span class="badge badge-success">{{ song.TOTAL_PLAYS }}</span></td>
+                <td><span class="badge badge-danger">{{ song.TOTAL_LIKES }}</span></td>
+                <td><span class="badge badge-primary">{{ song.TOTAL_COMMENTS }}</span></td>
+                <td>
+                    <strong style="color: #667eea; font-size: 1.1em;">{{ song.POPULARITY_SCORE }}</strong>
+                </td>
+                <td>
+                    <a href="{% url 'detalle_cancion' song.SONG_ID %}" class="btn btn-info" style="padding: 6px 12px; font-size: 14px;">Ver</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="alert alert-success" style="margin-top: 20px;">
+        <strong>📊 Fórmula de popularidad:</strong>
+        (Plays × 0.5) + (Likes × 2) + (Comentarios × 1.5)
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay datos suficientes para generar el ranking.</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'estadisticas' %}" class="btn">📊 Ver Otras Estadísticas</a>
+<a href="{% url 'index' %}" class="btn btn-warning">⬅️ Volver al Dashboard</a>
+{% endblock %}
+

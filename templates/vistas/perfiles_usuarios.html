@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Perfiles de Usuarios - Vista Optimizada{% endblock %}
+
+{% block content %}
+<h1>👥 Perfiles de Usuarios con Estadísticas</h1>
+
+<div class="alert alert-info">
+    <strong>📊 Vista de Oracle:</strong> vw_user_activity_profile - Estadísticas completas de actividad
+</div>
+
+{% if usuarios %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin: 20px 0;">
+        {% for usuario in usuarios %}
+        <div class="card" style="border-left: 4px solid #667eea;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
+                <div>
+                    <h3>{{ usuario.DISPLAY_NAME|default:usuario.USERNAME }}</h3>
+                    <p style="color: #999;">@{{ usuario.USERNAME }}</p>
+                    <span class="badge badge-primary">{{ usuario.USER_TYPE }}</span>
+                </div>
+                <a href="{% url 'perfil_usuario_detalle' usuario.USER_ID %}" class="btn btn-info" style="padding: 8px 15px; font-size: 14px;">Ver Perfil</a>
+            </div>
+
+            {% if usuario.BIO %}
+            <p style="margin-top: 10px; font-style: italic; color: #666;">{{ usuario.BIO|truncatewords:15 }}</p>
+            {% endif %}
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e0e0e0;">
+                <div style="text-align: center;">
+                    <strong style="display: block; font-size: 1.5em; color: #667eea;">{{ usuario.SONGS_CREATED }}</strong>
+                    <small style="color: #999;">🎵 Canciones</small>
+                </div>
+                <div style="text-align: center;">
+                    <strong style="display: block; font-size: 1.5em; color: #f5576c;">{{ usuario.FOLLOWERS_COUNT }}</strong>
+                    <small style="color: #999;">👥 Seguidores</small>
+                </div>
+                <div style="text-align: center;">
+                    <strong style="display: block; font-size: 1.5em; color: #38ef7d;">{{ usuario.PLAYLISTS_CREATED }}</strong>
+                    <small style="color: #999;">📋 Playlists</small>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px;">
+                <div style="text-align: center;">
+                    <small style="color: #999;">❤️ {{ usuario.SONGS_LIKED }} likes dados</small>
+                </div>
+                <div style="text-align: center;">
+                    <small style="color: #999;">▶️ {{ usuario.TOTAL_PLAYS }} plays</small>
+                </div>
+                <div style="text-align: center;">
+                    <small style="color: #999;">➕ {{ usuario.FOLLOWING_COUNT }} siguiendo</small>
+                </div>
+            </div>
+
+            <p style="margin-top: 15px; font-size: 0.9em; color: #999;">
+                Miembro desde: {{ usuario.CREATED_AT|date:"d/m/Y" }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <p><strong>Total:</strong> {{ usuarios|length }} usuarios activos</p>
+{% else %}
+    <div class="alert alert-info">
+        <p>No hay usuarios disponibles.</p>
+    </div>
+{% endif %}
+
+<a href="{% url 'lista_usuarios' %}" class="btn">👥 Ver Lista Simple</a>
+<a href="{% url 'index' %}" class="btn btn-warning">⬅️ Volver al Dashboard</a>
+{% endblock %}
+
